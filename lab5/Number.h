@@ -29,6 +29,7 @@ public:
     void operator--(int value);
     void operator+=(const Number& num);
     void operator=(const Number& num);
+    void operator=(Number&& num);
     void operator=(const char* str);
     void SwitchBase(int newBase);
     void Print();

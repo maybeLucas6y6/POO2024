@@ -18,6 +18,7 @@ Number::Number(int val)
     int v = val;
     while (v) {
         this->size++;
+        v /= 10;
     }
     capacity = size + 1;
     data = new char[capacity]{};
@@ -34,6 +35,7 @@ Number::Number(const Number& num)
     , data(new char[capacity])
     , base(num.base)
 {
+    std::cout << "-> c &\n";
     strcpy(this->data, num.data); 
 }
 Number::Number(const Number&& num)
@@ -42,6 +44,7 @@ Number::Number(const Number&& num)
     , data(num.data)
     , base(num.base)
 {
+    std::cout << "-> c &&\n";
 }
 Number::~Number() {
     if (this->data != nullptr) {
@@ -209,34 +212,44 @@ char Number::operator[](int i) {
     return -1;
 }
 void Number::operator--() {
-    for (int i = 0; i < this->size - 1; i++) {
+    for (int i = 0; i < this->size; i++) {
         this->data[i] = this->data[i + 1];
     }
 }
 void Number::operator--(int value) {
     this->size--;
-    this->data[this->size] = 0;
+    this->data[this->size - 1] = 0;
 }
 void Number::operator+=(const Number& num) {
     *this = *this + num;
 }
 void Number::operator=(const Number& num) {
+    std::cout << "-> = &\n";
     this->size = num.size;
     this->capacity = num.capacity;
     this->base = num.base;
     delete[] this->data;
-    this->data = num.data;
+    this->data = new char[this->capacity];
+    strcpy(this->data, num.data);
+}
+void Number::operator=(Number&& num) {
+    std::cout << "-> = &&\n";
+    this->size = num.size;
+    this->capacity = num.capacity;
+    this->base = num.base;
+    delete[] this->data;
+    num.data = nullptr;
 }
 void Number::operator=(const char* str) {
-    if (data == nullptr) {
+    if (this->data != nullptr) {
         delete[] data;
     }
 
-    data = new char[strlen(str) + 1];
-    strcpy(data, str);
-    size = strlen(str);
-    capacity = size + 1;
-    base = 10;
+    this->data = new char[strlen(str) + 1];
+    strcpy(this->data, str);
+    this->size = strlen(str);
+    this->capacity = this->size + 1;
+    this->base = 10;
 }
 void Number::SwitchBase(int newBase) {
     if (this->base != 10) {
@@ -338,7 +351,7 @@ void Number::FromDecimal(int newBase) {
     }
 
     if (this->size < strlen(buf)) {
-        delete[] this->data;
+        //delete[] this->data;
         this->data = new char[strlen(buf) + 1]{};
         strcpy(this->data, buf);
         this->size = strlen(this->data);
