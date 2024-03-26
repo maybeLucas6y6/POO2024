@@ -9,6 +9,7 @@ Number::Number(const char * value, int base)
     , data(new char[capacity])
     , base(base)
 {
+    std::cout << "-> ctor normal: " << static_cast<void*>(this->data) << "\n";
     strcpy(this->data, value);
 }
 Number::Number(int val)
@@ -35,7 +36,7 @@ Number::Number(const Number& num)
     , data(new char[capacity])
     , base(num.base)
 {
-    std::cout << "-> c &\n";
+    std::cout << "-> copy constructor\n";
     strcpy(this->data, num.data); 
 }
 Number::Number(const Number&& num)
@@ -44,12 +45,17 @@ Number::Number(const Number&& num)
     , data(num.data)
     , base(num.base)
 {
-    std::cout << "-> c &&\n";
+    std::cout << "-> move constructor\n";
 }
 Number::~Number() {
     if (this->data != nullptr) {
+        std::cout << "-> dtor: " << static_cast<void*>(this->data)
+            << " = " << this->data << "\n";
         delete[] this->data;
         this->data = nullptr;
+    }
+    else {
+        std::cout << "-> dtor: " << nullptr << "\n";
     }
 }
 Number operator+(const Number& A, const Number& B) {
@@ -108,6 +114,7 @@ Number operator+(const Number& A, const Number& B) {
         j--;
     }
 
+    std::cout << "-> buf: " << static_cast<void*>(buf) << " = " << buf << "\n";
     return { buf, targetBase };
 }
 Number operator-(const Number& A, const Number& B) {
@@ -224,7 +231,7 @@ void Number::operator+=(const Number& num) {
     *this = *this + num;
 }
 void Number::operator=(const Number& num) {
-    std::cout << "-> = &\n";
+    std::cout << "-> copy operator=\n";
     this->size = num.size;
     this->capacity = num.capacity;
     this->base = num.base;
@@ -233,11 +240,13 @@ void Number::operator=(const Number& num) {
     strcpy(this->data, num.data);
 }
 void Number::operator=(Number&& num) {
-    std::cout << "-> = &&\n";
+    std::cout << "-> move operator=\n";
+    std::cout << "-> this: " << static_cast<void*>(this->data) << "\n";
     this->size = num.size;
     this->capacity = num.capacity;
     this->base = num.base;
     delete[] this->data;
+    this->data = num.data;
     num.data = nullptr;
 }
 void Number::operator=(const char* str) {
@@ -368,6 +377,7 @@ void Number::FromDecimal(int newBase) {
 void Number::Print() {
     std::cout << "Base: " << this->base << " | ";
     std::cout << "Value: " << this->data << " | ";
+    std::cout << "data: " << static_cast<void*>(this->data) << " | ";
     std::cout << "(" << this->size << "/" << this->capacity << ")\n";
 }
 int Number::GetDigitsCount() {
