@@ -39,6 +39,7 @@ void string_test() {
 }
 
 int main() {
+    int_test();
     string_test();
     return 0;
 }
