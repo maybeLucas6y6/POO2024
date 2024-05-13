@@ -52,6 +52,7 @@ T& Array<T>::operator[](int index) const {
 template<typename T>
 const Array<T>& Array<T>::operator+=(const T& newElem) {
     Insert(Size, newElem);
+    return *this;
 }
 
 template<typename T>
