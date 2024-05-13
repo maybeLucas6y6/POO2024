@@ -1,6 +1,7 @@
 #include "Array.hpp"
 #include "Array.cpp"
 #include "ArrayIterator.cpp"
+// todo: ce cct e asta
 
 class MyComparator : public Compare {
 public:
